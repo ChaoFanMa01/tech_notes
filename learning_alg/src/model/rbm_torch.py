@@ -150,6 +150,10 @@ class RBM(nn.Module):
         delta_w = torch.mean(torch.tensor(positives) - torch.tensor(negatives), axis = 0)
         delta_b = torch.mean(v0 - vk, axis = 1).view(-1, 1)
         delta_c = torch.mean(prob_h_v0 - prob_h_vk, axis = 1).view(-1, 1)
+        
+        delta_w = delta_w.to(self.device)
+        delta_b = delta_b.to(self.device)
+        delta_c = delta_c.to(self.device)
 
         self.w += self.lr * delta_w
         self.b += self.lr * delta_b
@@ -163,7 +167,7 @@ class RBM(nn.Module):
         num_samples = v.shape[1]
         batch_indices = num_samples // self.batch_size
         for i in range(batch_indices):
-#            print('The %d-th batch' % (i))
+            print('CD-K: the %d-th batch' % (i))
             v0, vk, prob_h_v0, prob_h_vk = self.gibbs_sample(v[:, i * self.batch_size: i * self.batch_size + self.batch_size])
             self.update_param(v0, vk, prob_h_v0, prob_h_vk)
     

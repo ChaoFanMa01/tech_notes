@@ -25,23 +25,22 @@ def test():
     classifier = True
     real_valued = True
     k = 1
-    lr = 0.001
     pretrain_epochs = 1
     finetune_epochs = 100
     batch_size = 1
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    lr = torch.tensor(0.001, device = device)
     train_v = np.copy(train_data)
     # Transform the shape of data to the form of (num_v, num_samples).
     train_v = np.squeeze(train_v.reshape(-1, num_v, 1).T)
-    train_v = torch.tensor(train_v, dtype = torch.float32)
-    train_y = torch.tensor(train_labels)
+    train_v = torch.tensor(train_v, dtype = torch.float32, device = device)
+    train_y = torch.tensor(train_labels, device = device)
 
     test_v = np.copy(test_data)
     test_v = np.squeeze(test_v.reshape(-1, num_v, 1).T)
-    test_v = torch.tensor(test_v, dtype = torch.float32)
-    test_y = torch.tensor(test_labels)
+    test_v = torch.tensor(test_v, dtype = torch.float32, device = device)
+    test_y = torch.tensor(test_labels, device = device)
 
-
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     dbn = DBN(num_vs, num_hs, num_out, classifier, real_valued, k, lr, 
               pretrain_epochs, finetune_epochs, batch_size, device)
     dbn.fit(train_v[:, :2000], train_y[:2000])
