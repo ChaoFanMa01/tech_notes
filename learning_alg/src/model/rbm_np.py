@@ -11,7 +11,7 @@ import numpy as np
 
 class RBM(object):
     '''
-    Implementation of Restricted Boltzmann Machine (RBM).
+    Numpy Implementation of Restricted Boltzmann Machine (RBM).
     This implementation supports binary-valued RBM and 
     real-valued RBM. The real-valued RBM implementation 
     adopts the Gaussian distribution.
