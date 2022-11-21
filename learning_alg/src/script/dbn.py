@@ -43,17 +43,20 @@ def test():
 
     dbn = DBN(num_vs, num_hs, num_out, classifier, real_valued, k, lr, 
               pretrain_epochs, finetune_epochs, batch_size, device)
-    dbn.fit(train_v[:, :2000], train_y[:2000])
+    dbn.fit(train_v, train_y)
     for i in range(20):
         with torch.no_grad():
             fig, axies = plt.subplots(nrows = 1, ncols = 2)
             rec_v = dbn.reconstruct(test_v[:, i].view(-1, 1))
+            rec_v = rec_v.cpu()
             pred = dbn(test_v[:, i].view(-1, 1))
+            pred = pred.cpu()
             rec_v = rec_v.view((h, w))
             axies[0].imshow(rec_v, 'gray')
-            axies[1].imshow(test_v[:, i].reshape(h, w), 'gray')
+            s = test_v[:, i].cpu()
+            axies[1].imshow(s.reshape(h, w), 'gray')
             plt.show()
-            print('pred: %d, label: %d' % (torch.argmax(pred), test_y[i]))
+            print('pred: %d, label: %d' % (torch.argmax(pred), test_y[i].cpu()))
 
 if __name__ == '__main__':
     test()
